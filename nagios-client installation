@@ -1,0 +1,76 @@
+NRPE Agent Configuration:
+
+Steps to be followed on client Node are mentioned below:
+
+Step 1. Pre-requisite software:
+
+            yum install -y gcc glibc glibc-common openssl openssl-devel perl wget
+
+            cd /tmp
+
+            wget --no-check-certificate -O nrpe.tar.gz  
+
+            https://github.com/NagiosEnterprises/nrpe/archive/nrpe-3.2.1.tar.gz
+
+Step 2. nrpe agent installation on the client node
+
+            tar xzf nrpe.tar.gz
+
+            cd /tmp/nrpe-nrpe-3.2.1/
+
+            ./configure --enable-command-args                                 #Configure NRPE Agent
+
+            make all                                                                            #Compalie NRPE Agent
+
+            make install-groups-users                                                # Install NRPR Agent
+
+            make install
+
+            make install-config
+
+Step 3. Service file configuration
+
+            echo >> /etc/services                                                         # service file configuration
+
+            echo '# Nagios services' >> /etc/services
+
+            echo 'nrpe    5666/tcp' >> /etc/services
+
+            make install-init
+
+            systemctl enable nrpe.service
+
+            vi /usr/local/nagios/etc/nrpe.cfg
+
+            allowed_hosts=127.0.0.1,host_ip                                         #add host server id address
+
+            systemctl start nrpe.service
+
+            /usr/local/nagios/libexec/check_nrpe -H 127.0.0.1
+
+Step 4. Creating configuration file
+
+            NRPE Agent -Adding Linux clients –Nagios server editing 
+
+            vi  /usr/local/nagios/etc/nagios.cfg    
+
+#Add the below line into the configuration file
+
+            cfg_file=/usr/local/nagios/etc/objects/client.cfg
+
+            cd /usr/local/nagios/etc/objects
+
+            cp  localhost.cfg   client.cfg
+
+            sudo chown nagios:nagios client.cfg
+
+            sudo vi client.cfg
+
+#Add IP address of client node in client.cfg file along with replacing host_name with client_name in the whole file from localhost and Delete or comment out the Host Group
+
+            service nagios restart    
+
+
+
+
+
